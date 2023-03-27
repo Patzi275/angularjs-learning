@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html ng-app="myapp">
+<html>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,39 +8,47 @@
     <title>Hello Angular</title>
     <script src="angular-1.8.2/angular.min.js"></script>
     <script>
-        function myService() {
-            return {
-                getWorlds: function getWorlds() {
-                    return ['Saturn', 'Mars', 'Pluton'];
-                }
-            }
-        }
-
-        function myServiceController(theservice) {
-            var msc = this;
-            msc.messages = theservice.getWorlds();
-        }
-
-        function startup($rootScope, $window) {
-            $window.alert('The world informations are loading');
-            $rootScope.hasStarted = true;
-        }
-
+        // $ctrl in the default value for the ControllerAs
         angular.module('myapp', [])
-        .service('myService', [myService])
-        .controller('myServiceController', ['myService', myServiceController]) // the myServiceController parameter will be treated as an "myService"
-        .config(function() {
-            console.log('Configurations done !')
-        })
-        .run(['$rootScope', '$window', startup]);
+            .component('helloWorld', {
+                template: '<span> Hey people of {{$ctrl.city}}! I\'m {{$ctrl.myName}}. </span>',
+                bindings: { city: '@', element: '@' },
+                controller: function () {
+                    this.$onInit = function () {
+                        this.myName = `${this.element} man`;
+                    }
+                }
+            })
+            // Not understood but soon
+            .component('parentName', {
+                template: "<strong>{{$ctrl.myName}}'s History</strong>",
+                bindings: { myName: "@" },
+                require: {
+                    parent: '^parentComponent'
+                },
+                controller: function () {
+                    this.$onInit = function () {
+                        this.parent.foo();
+                    }
+                }
+            });
+        /*
+            angular.module("myApp",[]).component("customer", {
+                templateUrl : "customer.html", // your view here
+                controller: customerController, //your controller here
+                controllerAs: "cust"
+                //alternate name for your controller
+            })
+        */
     </script>
 </head>
-<body ng-class="{ 'started' : hasStarted }" ng-cloak>
-    <h3>Heay</h3>
-    <div ng-controller="myServiceController as vm">
-        <ul>
-            <li ng-repeat="msg in vm.messages">{{ msg }}</li>
-        </ul>
+
+<body ng-app="myapp">
+    <div>
+        <parent-name></parent-name>
+        <br>
+        <hello-world element="Fire" city="Gotam City"></hello-world>
     </div>
 </body>
+
 </html>
