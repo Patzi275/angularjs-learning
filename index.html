@@ -8,46 +8,21 @@
     <title>Hello Angular</title>
     <script src="angular-1.8.2/angular.min.js"></script>
     <script>
-        // $ctrl in the default value for the ControllerAs
-        angular.module('myapp', [])
-            .component('helloWorld', {
-                template: '<span> Hey people of {{$ctrl.city}}! I\'m {{$ctrl.myName}}. </span>',
-                bindings: { city: '@', element: '@' },
-                controller: function () {
-                    this.$onInit = function () {
-                        this.myName = `${this.element} man`;
-                    }
-                }
-            })
-            // Not understood but soon
-            .component('parentName', {
-                template: "<strong>{{$ctrl.myName}}'s History</strong>",
-                bindings: { myName: "@" },
-                require: {
-                    parent: '^parentComponent'
-                },
-                controller: function () {
-                    this.$onInit = function () {
-                        this.parent.foo();
-                    }
-                }
-            });
-        /*
-            angular.module("myApp",[]).component("customer", {
-                templateUrl : "customer.html", // your view here
-                controller: customerController, //your controller here
-                controllerAs: "cust"
-                //alternate name for your controller
-            })
-        */
+        var app = angular.module('app', []);
+        app.controller('sumController', function ($scope) {
+            $scope.value1 = 0;
+            $scope.value2 = 0;
+        });
     </script>
 </head>
 
-<body ng-app="myapp">
-    <div>
-        <parent-name></parent-name>
-        <br>
-        <hello-world element="Fire" city="Gotam City"></hello-world>
+<body ng-app="app">
+    <div ng-controller="sumController">
+        <input type="number" ng-model="value1">
+        +
+        <input type="number" ng-model="value2">
+        =
+        {{ value1 + value2 }}
     </div>
 </body>
 
