@@ -8,46 +8,37 @@
     <title>Hello Angular</title>
     <script src="angular-1.8.2/angular.min.js"></script>
     <script>
-        // $ctrl in the default value for the ControllerAs
         angular.module('myapp', [])
-            .component('helloWorld', {
-                template: '<span> Hey people of {{$ctrl.city}}! I\'m {{$ctrl.myName}}. </span>',
-                bindings: { city: '@', element: '@' },
-                controller: function () {
-                    this.$onInit = function () {
-                        this.myName = `${this.element} man`;
-                    }
-                }
+            .run(function ($rootScope) {
+                $rootScope.username = null;
             })
-            // Not understood but soon
-            .component('parentName', {
-                template: "<strong>{{$ctrl.myName}}'s History</strong>",
-                bindings: { myName: "@" },
-                require: {
-                    parent: '^parentComponent'
-                },
-                controller: function () {
-                    this.$onInit = function () {
-                        this.parent.foo();
-                    }
+            .controller('myController', function($scope) {
+                $scope.connected = false;
+                $scope.getName = function () {
+                    return $scope.username;
                 }
             });
-        /*
-            angular.module("myApp",[]).component("customer", {
-                templateUrl : "customer.html", // your view here
-                controller: customerController, //your controller here
-                controllerAs: "cust"
-                //alternate name for your controller
-            })
-        */
     </script>
 </head>
 
-<body ng-app="myapp">
+<body ng-app="myapp" ng-controller="myController">
     <div>
-        <parent-name></parent-name>
-        <br>
-        <hello-world element="Fire" city="Gotam City"></hello-world>
+        <input type="text" ng-model="username">
+        <input type="checkbox" ng-model="connected">
+    </div>
+    <hr>
+    <div>
+        <div ng-if="connected">
+            <div ng-if="username">
+                Welcome {{ username }} !
+            </div>    
+            <div ng-if="!username">
+                Hey mister/miss without name. Change your name <a href="#">there</a>.
+            </div>   
+        </div>
+        <div ng-if="!connected">
+             <a href="#">Login</a> <a href="#">Register</a>
+        </div>
     </div>
 </body>
 
