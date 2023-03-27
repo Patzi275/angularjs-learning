@@ -9,9 +9,6 @@
     <script src="angular-1.8.2/angular.min.js"></script>
     <script>
         angular.module('myapp', [])
-            .run(function ($rootScope) {
-                $rootScope.username = null;
-            })
             .controller('myController', function($scope) {
                 $scope.connected = false;
                 $scope.getName = function () {
