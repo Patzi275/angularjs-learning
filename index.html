@@ -29,10 +29,10 @@
     <hr>
     <div>
         <div ng-if="connected">
-            <div ng-if="username">
+            <div ng-if="getName()">
                 Welcome {{ username }} !
             </div>    
-            <div ng-if="!username">
+            <div ng-if="!getName()">
                 Hey mister/miss without name. Change your name <a href="#">there</a>.
             </div>   
         </div>
