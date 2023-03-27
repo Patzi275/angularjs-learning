@@ -1,16 +1,45 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="myapp">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Angular</title>
     <script src="angular-1.8.2/angular.min.js"></script>
+    <script>
+        function myService() {
+            return {
+                getWorlds: function getWorlds() {
+                    return ['Saturn', 'Mars', 'Pluton'];
+                }
+            }
+        }
+
+        function myServiceController(myService) {
+            var msc = this;
+            msc.messages = myService.getWorlds();
+        }
+
+        function startup($rootScope, $window) {
+            $window.alert('The world informations are loading');
+            $rootScope.hasStarted = true;
+        }
+
+        angular.module('myapp', [])
+        .service('myService', [myService])
+        .controller('myServiceController', ['myService', myServiceController])
+        .config(function() {
+            console.log('Configurations done !')
+        })
+        .run(['$rootScope', '$window', startup]);
+    </script>
 </head>
-<body ng-init="name='World'">
-    <label>Name</label>
-    <input ng-model="name">
-    <span>Hello, {{ name }}!</span>
-    <p ng-bind="name"></p>
+<body ng-class="{ 'started' : hasStarted }" ng-cloak>
+    <h3>Heay</h3>
+    <div ng-controller="myServiceController as vm">
+        <ul>
+            <li ng-repeat="msg in vm.messages">{{ msg }}</li>
+        </ul>
+    </div>
 </body>
 </html>
