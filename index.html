@@ -15,9 +15,9 @@
             }
         }
 
-        function myServiceController(myService) {
+        function myServiceController(theservice) {
             var msc = this;
-            msc.messages = myService.getWorlds();
+            msc.messages = theservice.getWorlds();
         }
 
         function startup($rootScope, $window) {
@@ -27,7 +27,7 @@
 
         angular.module('myapp', [])
         .service('myService', [myService])
-        .controller('myServiceController', ['myService', myServiceController])
+        .controller('myServiceController', ['myService', myServiceController]) // the myServiceController parameter will be treated as an "myService"
         .config(function() {
             console.log('Configurations done !')
         })
