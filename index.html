@@ -8,34 +8,69 @@
     <title>Hello Angular</title>
     <script src="angular-1.8.2/angular.min.js"></script>
     <script>
-        angular.module('myapp', [])
-            .controller('myController', function($scope) {
-                $scope.connected = false;
-                $scope.getName = function () {
-                    return $scope.username;
+        function TodoDataService() {
+            let data = [
+                {
+                    id: 1,
+                    name: "Write a todo",
                 }
-            });
+            ];
+
+            let lastIndex = 1;
+
+            let service = {
+                get todos() {
+                    return data;
+                },
+                add: function(value) {
+                    data.push({
+                        id: ++lastIndex,
+                        name: value || "Empty"
+                    });
+                },
+                remove: function(id) {
+                    data = data.filter(x => x.id != id);
+                }
+            }
+
+            return service;
+        }
+
+        function TodoController(TodoDataService) {
+            let vm = this;
+            vm.textInput = "";
+
+            vm.todoDataService = TodoDataService;
+            vm.todos = vm.todoDataService.todos;
+            
+            vm.addTask = function () {
+                vm.todoDataService.add(vm.textInput);
+            }
+
+            vm.deleteTask = function (id) {
+                vm.todoDataService.remove(id);
+                vm.todos = vm.todoDataService.todos;
+                console.log("remove " + id);
+            }
+        }
+
+        angular.module('app', [])
+            .service('TodoDataService', TodoDataService)
+            .controller('TodoController', ["TodoDataService", TodoController]);
     </script>
 </head>
 
-<body ng-app="myapp" ng-controller="myController">
-    <div>
-        <input type="text" ng-model="username">
-        <input type="checkbox" ng-model="connected">
-    </div>
-    <hr>
-    <div>
-        <div ng-if="connected">
-            <div ng-if="getName()">
-                Welcome {{ username }} !
-            </div>    
-            <div ng-if="!getName()">
-                Hey mister/miss without name. Change your name <a href="#">there</a>.
-            </div>   
-        </div>
-        <div ng-if="!connected">
-             <a href="#">Login</a> <a href="#">Register</a>
-        </div>
+<body ng-app="app">
+    <div  ng-controller="TodoController as vm">
+        <label for="textInput">
+            <input id="textInput" type="text" ng-model="vm.textInput">
+            <button ng-disabled="vm.textInput.length===0" ng-click="vm.addTask()">Add</button>
+        </label>
+        <ul>
+            <li ng-repeat="todo in vm.todos">
+                {{ todo.name }} <button ng-click="vm.deleteTask(todo.id)">Supprimer</button>
+            </li>
+        </ul>
     </div>
 </body>
 
