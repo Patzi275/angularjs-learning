@@ -7,36 +7,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Angular</title>
     <script src="angular-1.8.2/angular.min.js"></script>
+    <style>
+        .inc-container {
+            min-height: 100vh;
+            min-width: 100vw;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            font-family: lato;
+        }
+
+        .inc {
+            font-size: 4em;
+            cursor: pointer;
+            background-color: blueviolet;
+            color: white;
+            box-shadow: 10px 10px 0 0 black;
+            padding: 0 40px;
+            margin: 20px;
+        }
+
+        .inc::selection {
+            background-color: blueviolet;
+        }
+        
+    </style>
     <script>
-        angular.module('myapp', [])
-            .controller('myController', function($scope) {
-                $scope.connected = false;
-                $scope.getName = function () {
-                    return $scope.username;
+        angular.module("myapp", [])
+            .controller('incController', function ($scope) {
+                this.$onInit = function () {
+                    $scope.tip = 0;
+                    $scope.char = 0;
+                    $scope.sentence = ""
                 }
+                $scope.increment = function() {
+                    $scope.tip += 1;
+                };
+                $scope.updateChar = function() {
+                    $scope.char = $scope.sentence.replaceAll(' ','').length;
+                };
             });
     </script>
 </head>
 
-<body ng-app="myapp" ng-controller="myController">
-    <div>
-        <input type="text" ng-model="username">
-        <input type="checkbox" ng-model="connected">
-    </div>
-    <hr>
-    <div>
-        <div ng-if="connected">
-            <div ng-if="getName()">
-                Welcome {{ username }} !
-            </div>    
-            <div ng-if="!getName()">
-                Hey mister/miss without name. Change your name <a href="#">there</a>.
-            </div>   
+<body ng-app="myapp">
+   <div class="inc-container" ng-controller="incController">
+        <textarea ng-model="sentence" ng-change="updateChar()" cols="60" rows="5"></textarea>
+        <div class="inc">
+            Nb char: {{ char }}
         </div>
-        <div ng-if="!connected">
-             <a href="#">Login</a> <a href="#">Register</a>
+        <div class="inc" ng-click="increment()">
+            Nb tip: {{ tip }}
         </div>
-    </div>
+   </div>
 </body>
 
 </html>
